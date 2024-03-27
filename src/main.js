@@ -2,7 +2,8 @@ const core = require('@actions/core')
 const { getDownloadObject } = require('./utils')
 const tc = require('@actions/tool-cache')
 const path = require('path')
-const fs = require('fs')
+const exec = require('@actions/exec')
+const os = require('os')
 
 /**
  * The main function for the action.
@@ -29,8 +30,10 @@ async function run() {
     const binPath = path.join(cachedPath, toolName)
     core.debug(`Binary Path: ${binPath}`)
 
-    core.info(`Making ${toolName} binary executable`)
-    fs.chmod(binPath, '755')
+    if (os.platform() !== 'win32') {
+      core.info(`Making ${toolName} binary executable`)
+      await exec.exec('chmod', ['+x', binPath])
+    }
 
     core.info(`Adding ${cachedPath} to path`)
     core.addPath(cachedPath)

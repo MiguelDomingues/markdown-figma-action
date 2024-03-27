@@ -6591,7 +6591,8 @@ const core = __nccwpck_require__(2186)
 const { getDownloadObject } = __nccwpck_require__(1608)
 const tc = __nccwpck_require__(7784)
 const path = __nccwpck_require__(1017)
-const fs = __nccwpck_require__(7147)
+const exec = __nccwpck_require__(1514)
+const os = __nccwpck_require__(2037)
 
 /**
  * The main function for the action.
@@ -6618,8 +6619,10 @@ async function run() {
     const binPath = path.join(cachedPath, toolName)
     core.debug(`Binary Path: ${binPath}`)
 
-    core.info(`Making ${toolName} binary executable`)
-    fs.chmod(binPath, 755, () => {})
+    if (os.platform() !== 'win32') {
+      core.info(`Making ${toolName} binary executable`)
+      await exec.exec('chmod', ['+x', binPath])
+    }
 
     core.info(`Adding ${cachedPath} to path`)
     core.addPath(cachedPath)
