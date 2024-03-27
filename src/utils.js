@@ -14,11 +14,10 @@ function getDownloadObject(version) {
   const platform = os.platform()
   const filename = `markdown-figma-${mapOS(platform)}`
   const extension = platform === 'win32' ? '.exe' : ''
-  const binPath = `${filename}${extension}`
   const url = `https://github.com/MiguelDomingues/markdown-figma/releases/download/v${version}/${filename}${extension}`
   return {
     url,
-    binPath
+    extension
   }
 }
 module.exports = { getDownloadObject }

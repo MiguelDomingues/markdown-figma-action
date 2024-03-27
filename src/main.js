@@ -27,7 +27,7 @@ async function run() {
       version
     )
     core.debug(`Cache Path: ${cachedPath}`)
-    const binPath = path.join(cachedPath, toolName)
+    const binPath = path.join(cachedPath, `${toolName}${download.extension}`)
     core.debug(`Binary Path: ${binPath}`)
 
     if (os.platform() !== 'win32') {
