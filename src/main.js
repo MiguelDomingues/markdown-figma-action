@@ -1,5 +1,8 @@
 const core = require('@actions/core')
-const { wait } = require('./wait')
+const { getDownloadObject } = require('./utils')
+const tc = require('@actions/tool-cache')
+const path = require('path')
+const exec = require('@actions/exec')
 
 /**
  * The main function for the action.
@@ -7,18 +10,30 @@ const { wait } = require('./wait')
  */
 async function run() {
   try {
-    const ms = core.getInput('milliseconds', { required: true })
+    const version = core.getInput('version')
+    core.info(`Version: ${version}`)
 
-    // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
-    core.debug(`Waiting ${ms} milliseconds ...`)
+    // Download the specific version of the tool
+    const download = getDownloadObject(version)
+    core.info(`Downloading: ${download.url}`)
+    const downloadPath = await tc.downloadTool(download.url)
 
-    // Log the current timestamp, wait, then log the new timestamp
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    const toolName = `markdown-figma`
+    const cachedPath = await tc.cacheFile(
+      downloadPath,
+      toolName,
+      toolName,
+      version
+    )
+    core.debug(`Cache Path: ${cachedPath}`)
+    const binPath = path.join(cachedPath, toolName)
+    core.debug(`Binary Path: ${binPath}`)
 
-    // Set outputs for other workflow steps to use
-    core.setOutput('time', new Date().toTimeString())
+    core.info(`Making ${toolName} binary executable`)
+    await exec.exec('chmod', ['+x', binPath])
+
+    core.info(`Adding ${cachedPath} to path`)
+    core.addPath(cachedPath)
   } catch (error) {
     // Fail the workflow run if an error occurs
     core.setFailed(error.message)

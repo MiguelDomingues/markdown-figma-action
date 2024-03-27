@@ -1,18 +1,12 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Setup markdown-figma'
+description: 'Install markdown-figma CLI'
+author: 'Miguel Domingues'
 
-# Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
-    required: true
-    default: '1000'
-
-# Define your outputs here.
-outputs:
-  time:
-    description: 'Your output description here'
+  version:
+    description: 'Version of Markdown Figma CLI to install'
+    required: false
+    default: 0.10.5
 
 runs:
   using: node20

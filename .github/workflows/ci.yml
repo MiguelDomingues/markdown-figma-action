@@ -44,9 +44,32 @@ jobs:
         id: npm-ci-test
         run: npm run ci-test
 
-  test-action:
-    name: GitHub Actions Test
+  test-action-latest:
+    name: GitHub Actions Test Latest
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Test Local Action
+        id: test-action
+        uses: ./
+
+      - name: Help
+        run: |
+          markdown-figma --help
+
+  test-action-specific:
+    name: GitHub Actions Test Specific
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
 
     steps:
       - name: Checkout
@@ -57,8 +80,8 @@ jobs:
         id: test-action
         uses: ./
         with:
-          milliseconds: 1000
+          version: 0.10.1
 
-      - name: Print Output
-        id: output
-        run: echo "${{ steps.test-action.outputs.time }}"
+      - name: Help
+        run: |
+          markdown-figma --help
