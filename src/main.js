@@ -30,7 +30,7 @@ async function run() {
     core.debug(`Binary Path: ${binPath}`)
 
     core.info(`Making ${toolName} binary executable`)
-    fs.chmod(binPath, 755, () => {})
+    fs.chmod(binPath, '755')
 
     core.info(`Adding ${cachedPath} to path`)
     core.addPath(cachedPath)
