@@ -6592,6 +6592,7 @@ const { getDownloadObject } = __nccwpck_require__(1608)
 const tc = __nccwpck_require__(7784)
 const path = __nccwpck_require__(1017)
 const exec = __nccwpck_require__(1514)
+const os = __nccwpck_require__(2037)
 
 /**
  * The main function for the action.
@@ -6615,11 +6616,13 @@ async function run() {
       version
     )
     core.debug(`Cache Path: ${cachedPath}`)
-    const binPath = path.join(cachedPath, toolName)
+    const binPath = path.join(cachedPath, `${toolName}${download.extension}`)
     core.debug(`Binary Path: ${binPath}`)
 
-    core.info(`Making ${toolName} binary executable`)
-    await exec.exec('chmod', ['+x', binPath])
+    if (os.platform() !== 'win32') {
+      core.info(`Making ${toolName} binary executable`)
+      await exec.exec('chmod', ['+x', binPath])
+    }
 
     core.info(`Adding ${cachedPath} to path`)
     core.addPath(cachedPath)
@@ -6655,11 +6658,10 @@ function getDownloadObject(version) {
   const platform = os.platform()
   const filename = `markdown-figma-${mapOS(platform)}`
   const extension = platform === 'win32' ? '.exe' : ''
-  const binPath = `${filename}${extension}`
   const url = `https://github.com/MiguelDomingues/markdown-figma/releases/download/v${version}/${filename}${extension}`
   return {
     url,
-    binPath
+    extension
   }
 }
 module.exports = { getDownloadObject }
