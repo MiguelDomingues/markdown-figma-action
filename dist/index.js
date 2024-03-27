@@ -6611,7 +6611,7 @@ async function run() {
     const toolName = `markdown-figma`
     const cachedPath = await tc.cacheFile(
       downloadPath,
-      toolName,
+      `${toolName}${download.extension}`,
       toolName,
       version
     )
@@ -6620,7 +6620,7 @@ async function run() {
     core.debug(`Binary Path: ${binPath}`)
 
     if (os.platform() !== 'win32') {
-      core.info(`Making ${toolName} binary executable`)
+      core.info(`Making ${toolName}${download.extension} binary executable`)
       await exec.exec('chmod', ['+x', binPath])
     }
 
