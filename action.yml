@@ -6,7 +6,7 @@ inputs:
   version:
     description: 'Version of Markdown Figma CLI to install'
     required: false
-    default: 0.10.5
+    default: 0.10.6
 
 runs:
   using: node20
