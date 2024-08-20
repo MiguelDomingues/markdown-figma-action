@@ -1,3 +1,5 @@
+/*eslint space-before-function-paren: 1*/
+
 const core = require('@actions/core')
 const { getDownloadObject } = require('./utils')
 const tc = require('@actions/tool-cache')
